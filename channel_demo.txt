@@ -1,0 +1,34 @@
+
+// go 伪代码  并发调用rpc获取用户信息信息
+func getMemberDetails(memberIds []int) []Detail{
+
+    memberDetailsChannel := make(channel Detail, len(memberIds))
+
+    for _, memberId := range memberIds{
+        // 并发调用rpc获取详细信息
+        go getDetail(memberId int){
+          memberDetailsChannel  <- callRpc(memberId)
+        }(memberId)
+    }
+
+    detailMap := make(map[int]Detail)
+    for i:=0; i< len(memberIds); i++{
+        detail <- memberDetailsChannel
+        detailMap[detail.id] = detail
+    }
+    
+    ret := make([]Detail, len(memberIds))
+    for _, memberId := range{
+        ret = append(ret, detailMap[memberId])
+    }
+    return ret
+}
+
+// python 实现 伪代码
+def get_member_details(member_ids):
+    import gevent
+    greenlets = []
+    for member_id in member_ids:
+        greenlets.append(gevent.spawn(callRpc, member_id))
+   gevent.joinall(greenlets)
+   return [g.value for g in greenlets]
